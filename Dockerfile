@@ -30,9 +30,8 @@ RUN apt-get update && \
       jq \
     && rm -rf /var/lib/apt/lists/*
 
-# Ensure pip works system-wide for the runner user.
-RUN python3 -m pip install --break-system-packages --upgrade pip setuptools wheel pyyaml 2>/dev/null || \
-    python3 -m pip install --upgrade pip setuptools wheel pyyaml
+# Install pyyaml etc. (do NOT upgrade pip — it's Debian-managed, no RECORD file).
+RUN python3 -m pip install --break-system-packages --no-warn-script-location setuptools wheel pyyaml
 
 # Back to the runner user (ARC expects the runner to run as 'runner').
 USER runner
