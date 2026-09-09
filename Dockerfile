@@ -40,6 +40,14 @@ RUN python3 -m pip install --break-system-packages --no-warn-script-location set
 # CWD-relative and not visible to ARC's runner user).
 RUN curl -fsSL https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.21.9 BIN_DIR=/usr/local/bin sh
 
+# otel-cli: emit OTel traces from workflow steps to our in-cluster collector.
+# Outbound-only (self-hosted runner -> collector over the LAN/cluster); no
+# inbound exposure or GitHub webhook required. Pinned to the Linux amd64 build
+# of the prebuilt release (installed to /usr/local/bin, on the 'runner' PATH).
+RUN curl -fsSL "https://github.com/equinix-labs/otel-cli/releases/download/v0.4.5/otel-cli_0.4.5_linux_amd64.tar.gz" -o /tmp/otel-cli.tgz \
+ && tar -xzf /tmp/otel-cli.tgz -C /usr/local/bin \
+ && rm /tmp/otel-cli.tgz
+
 # Back to the runner user (ARC expects the runner to run as 'runner').
 USER runner
 
