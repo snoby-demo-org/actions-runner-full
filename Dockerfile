@@ -44,4 +44,4 @@ RUN curl -fsSL https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.21.9 BI
 USER runner
 
 # Confirm tool versions (visible at deploy time / for debugging).
-RUN git --version && python3 --version && ruby --version && make --version | head -1 && autoconf --version | head -1 && dagger --version
+RUN git --version && python3 --version && ruby --version && make --version | head -1 && autoconf --version | head -1 && dagger version
