@@ -22,11 +22,11 @@ DinD sidecar provides the docker daemon, and this image supplies the tooling):
 ```yaml
 containerMode:
   type: dind
-# runner image override -> ghcr.io/snoby/actions-runner-full:full
+# runner image override -> ghcr.io/snoby-demo-org/actions-runner-full:full
 ```
 
 Built automatically on push to `main` (GitHub-hosted `ubuntu-latest`),
-pushed to `ghcr.io/snoby/actions-runner-full:full` and `:latest`.
+pushed to `ghcr.io/snoby-demo-org/actions-runner-full:full` and `:latest`.
 
 ## Why not `myoung34` / `summerwind`?
 
