@@ -51,10 +51,12 @@ RUN curl -fsSL "https://github.com/equinix-labs/otel-cli/releases/download/v0.4.
 # OTel shell SDK (5.63.0 = the fork snoby/opentelemetry-github VERSION): bake it
 # so instrumented jobs skip the per-pod 46MB deb download + postinst pip wheels.
 # install.sh's `type otel.sh` guard makes that path a no-op at runtime when present.
-RUN curl -fsSL -o /tmp/otel-shell.deb \
+RUN apt-get update \
+ && curl -fsSL -o /tmp/otel-shell.deb \
       "https://github.com/plengauer/Thoth/releases/download/v5.63.0/opentelemetry-shell_5.63.0_amd64.deb" \
  && apt-get install -y --no-install-recommends /tmp/otel-shell.deb \
- && rm /tmp/otel-shell.deb
+ && rm /tmp/otel-shell.deb \
+ && rm -rf /var/lib/apt/lists/*
 
 # unzip + parallel + nodejs/npm are apt-installed in every job pod today
 # (inject_and_init.sh install.sh line); bake them so `ensure_installed` no-ops.
