@@ -58,7 +58,19 @@ RUN apt-get update \
       "https://github.com/plengauer/Thoth/releases/download/v5.63.0/opentelemetry-shell_5.63.0_amd64.deb" \
  && apt-get install -y --no-install-recommends /tmp/otel-shell.deb \
  && rm /tmp/otel-shell.deb \
- && rm -rf /var/lib/apt/lists/*
+ && rm -rf /var/lib/apt/lists/* \
+ && git clone --depth 1 --branch lab-patches \
+      https://github.com/snoby/opentelemetry-github /tmp/otelfork \
+ && cp /tmp/otelfork/src/usr/share/opentelemetry_shell/api.sh \
+       /usr/share/opentelemetry_shell/api.sh \
+ && rm -rf /tmp/otelfork
+
+# api.sh overlay (fork 1ae225a): open the sdk pipe FIFO read-write instead of
+# write-only. A write-only open blocks forever (kernel wait_for_partner) when
+# the sdk.py reader dies — observed in CI as 15min+ hangs of instrumented
+# commands (checkout, git diff). O_RDWR never blocks; a dead reader then
+# surfaces as EPIPE/SIGPIPE, ignored via trap '' PIPE — telemetry fails open
+# instead of hanging the step. Keep in sync with the fork's lab-patches branch.
 
 # unzip + parallel + nodejs/npm are apt-installed in every job pod today
 # (inject_and_init.sh install.sh line); bake them so `ensure_installed` no-ops.
